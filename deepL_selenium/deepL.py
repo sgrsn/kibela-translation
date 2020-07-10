@@ -57,10 +57,11 @@ class DeepLDriver():
         # attribute "_dl-attr should be onClick: $0.doCopy"
         return button
 
-    def get_translation(self, step_time_click=1.0, limit_time=50.0):
+    def get_translation(self, step_time_click=5.0, limit_time=50.0):
         
         button = self.get_translation_copy_button()
-
+        content = ""
+        clipboard.copy("")
         wait_counter = 0.0
         while True:
             print("wait...")
@@ -68,11 +69,14 @@ class DeepLDriver():
             wait_counter += step_time_click
 
             self.scroll_to_element(button)
-            button = self.get_translation_copy_button()
-            button.click()
+            try:
+                button.click()
+            except:
+                pass
+            
             content = clipboard.paste()
 
-            if content:
+            if len(content) > 0:
                 print("翻訳確認")
                 break
 
