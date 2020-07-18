@@ -23,11 +23,12 @@ class KibelaDriver():
         ja_title = translation[ self.title ]
         self.add_image_sentence_in_directory(translation)       # 翻訳語のテキストに画像テキストを追加
         self.add_references_sentence_in_directory(translation)  # 翻訳語のテキストにreferencesを追加
+        self.add_headliness_sentence_in_directory(translation)  # ヘッドライン(## など)を追加
 
         for en_text in self.corpus:
 
             if en_text in translation:
-                ja_text_list.append( translation[en_text] ) 
+                ja_text_list.append( translation[en_text] )         
 
             else:
                 print('keyがないですね')
@@ -89,6 +90,7 @@ class KibelaDriver():
         tmp_corpus = self.corpus.copy()
         self.remove_image_sentence(tmp_corpus)      # 翻訳用のcorpusから画像テキストを抽出, 除外
         self.remove_references_sentence(tmp_corpus) # 翻訳用のcorpusからReferencesを抽出, 除外
+        self.remove_headline_sentence(tmp_corpus)   # ヘッドライン(## など)を除外
         tmp_corpus.append(self.title)
         print("size: ", len(tmp_corpus))
 
@@ -121,6 +123,22 @@ class KibelaDriver():
     def add_references_sentence_in_directory(self, dir):
         for ref_sentence in self.ref_list:
             dir[ref_sentence] = ref_sentence
+
+    def remove_headline_sentence(self, tmp_corpus):
+        self.headline_list = []
+        self.sharp_dir = {}
+        for sentence in self.corpus:
+            if re.match('#* ', sentence):
+                fixed_sentence = re.sub('#*', '', sentence)
+                tmp_corpus.remove(sentence)
+                tmp_corpus.append(fixed_sentence)
+                self.headline_list.append(sentence)
+                self.sharp_dir[fixed_sentence] = re.match('#*', sentence).group()
+
+    def add_headliness_sentence_in_directory(self, dir):
+        for sentence in self.headline_list:
+            # dir[ "## title" ] = "##" + dir[" title"](="題")
+            dir[sentence] = self.sharp_dir[re.sub('#*', '', sentence)] + dir[re.sub('#*', '', sentence)]
 
     def close_driver(self):
         self.driver.close()
