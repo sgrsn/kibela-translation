@@ -4,16 +4,18 @@ from deepL_selenium.deepL import DeepLDriver
 
 if __name__ == '__main__':
 
-    kibela_url = 'https://hidaka.kibe.la'#/groups/2'
+    kibela_url = 'https://hidaka.kibe.la/groups/2'
     password = sys.argv[1]
 
-    my_driver_path = 'C:/Users/SGRSN/Desktop/chromedriver_win32/chromedriver'
+    # my_driver_path = 'C:/Users/SGRSN/Desktop/chromedriver_win32/chromedriver'
+    my_driver_path = 'C:/Users/i7-860/OneDrive/デスクトップ/chromedriver_win32/chromedriver'
 
     # kibrlaにログイン
     my_kibela = KibelaDriver(kibela_url, 'sgrsn1711@gmail.com', password, my_driver_path)
 
     # kibelaから記事をコピー
     article_url = 'https://hidaka.kibe.la/notes/142'
+    # article_url = 'https://hidaka.kibe.la/notes/332'
     tmp_corpus = my_kibela.get_corpus(article_url)
 
     # deepLで翻訳
