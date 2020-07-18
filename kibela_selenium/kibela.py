@@ -21,7 +21,8 @@ class KibelaDriver():
     def get_translated(self, translation):
         ja_text_list = []
         ja_title = translation[ self.title ]
-        self.add_image_sentence_in_directory(translation)
+        self.add_image_sentence_in_directory(translation)       # 翻訳語のテキストに画像テキストを追加
+        self.add_references_sentence_in_directory(translation)  # 翻訳語のテキストにreferencesを追加
 
         for en_text in self.corpus:
 
@@ -85,25 +86,41 @@ class KibelaDriver():
         self.title, text = self.copy_article(url)
 
         self.corpus = text.split('\n')    #['en', 'en'...]のリスト
-
         tmp_corpus = self.corpus.copy()
-
-        # 翻訳の邪魔なので画像を除外
-        self.img_list = []
-        for sentence in self.corpus:
-            if re.match('<img title=.*>', sentence):
-                self.img_list.append(sentence)
-                tmp_corpus.remove(sentence)
-
+        self.remove_image_sentence(tmp_corpus)      # 翻訳用のcorpusから画像テキストを抽出, 除外
+        self.remove_references_sentence(tmp_corpus) # 翻訳用のcorpusからReferencesを抽出, 除外
         tmp_corpus.append(self.title)
         print("size: ", len(tmp_corpus))
 
         # ['text1', 'text2'..., 'title']
         return tmp_corpus
 
+    def remove_image_sentence(self, tmp_corpus):
+        # 翻訳の邪魔なので画像を除外
+        self.img_list = []
+        for sentence in self.corpus:
+            if re.match('<img title=.*>', sentence):
+                self.img_list.append(sentence)
+                tmp_corpus.remove(sentence) 
+
     def add_image_sentence_in_directory(self, dir):
         for img_sentence in self.img_list:
             dir[img_sentence] = img_sentence
+     
+    def remove_references_sentence(self, tmp_corpus):
+       # 翻訳の邪魔なのでreferencesを除外
+        self.ref_list = []
+        is_ref = False
+        for sentence in self.corpus:
+            if is_ref:
+                self.ref_list.append(sentence)
+                tmp_corpus.remove(sentence)
+            if re.match('# References', sentence):
+                is_ref = True
+
+    def add_references_sentence_in_directory(self, dir):
+        for ref_sentence in self.ref_list:
+            dir[ref_sentence] = ref_sentence
 
     def close_driver(self):
         self.driver.close()
