@@ -7,10 +7,9 @@ import pyperclip as clipboard
 import re
 
 class KibelaDriver():
-    def __init__(self, url, username, password):
-        web_driver_path = 'C:\\Users\\i7-860\\OneDrive\\デスクトップ\\chromedriver_win32\\chromedriver'
+    def __init__(self, url, username, password, driver_path):
         self.url = url
-        self.driver = webdriver.Chrome(executable_path=web_driver_path)
+        self.driver = webdriver.Chrome(executable_path=driver_path)
         self.driver.get(url)
         self.login(username, password)
     
