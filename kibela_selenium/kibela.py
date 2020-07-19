@@ -23,6 +23,7 @@ class KibelaDriver():
         ja_title = translation[ self.title ]
         self.add_image_sentence_in_directory(translation)       # 翻訳語のテキストに画像テキストを追加
         self.add_references_sentence_in_directory(translation)  # 翻訳語のテキストにreferencesを追加
+        self.references_split(translation)                      # referencesを分割, 箇条書きに
         self.add_headliness_sentence_in_directory(translation)  # ヘッドライン(## など)を追加
 
         for en_text in self.corpus:
@@ -117,12 +118,17 @@ class KibelaDriver():
             if is_ref:
                 self.ref_list.append(sentence)
                 tmp_corpus.remove(sentence)
-            if re.match('# References', sentence):
+            if re.match('# References', sentence, flags=re.IGNORECASE):
                 is_ref = True
 
     def add_references_sentence_in_directory(self, dir):
         for ref_sentence in self.ref_list:
             dir[ref_sentence] = ref_sentence
+    
+    def references_split(self, dir):
+        for ref_sentence in self.ref_list:
+            fixed = re.sub(r'(\[\d*\])', r'\n- \1', ref_sentence)
+            dir[ref_sentence] = fixed
 
     def remove_headline_sentence(self, tmp_corpus):
         self.headline_list = []
