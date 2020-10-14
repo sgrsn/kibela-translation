@@ -43,7 +43,7 @@ class KibelaDriver():
         self.driver.get(self.url)
         self.driver.find_element_by_xpath('//*[@id="header"]/nav/div[2]/div[4]/div/div/div/a[1]').click()
 
-        self.driver.find_element_by_xpath('/html/body/div[1]/div/div/div[3]/div/div[1]/input').send_keys(title)
+        self.driver.find_element_by_xpath('/html/body/div[1]/div/div/div[3]/div[1]/div/div[1]/input').send_keys(title)
         time.sleep(1.0)
 
         codeMirror = self.driver.find_element_by_class_name("CodeMirror")
