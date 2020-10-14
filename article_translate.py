@@ -4,18 +4,21 @@ from deepL_selenium.deepL import DeepLDriver
 
 if __name__ == '__main__':
 
+    # kibelaのチームのURL(ログイン用)
     kibela_url = 'https://hidaka.kibe.la/groups/2'
-    password = sys.argv[1]
 
-    # my_driver_path = 'C:/Users/SGRSN/Desktop/chromedriver_win32/chromedriver'
+    # 翻訳する記事のURL
+    article_url = 'https://hidaka.kibe.la/notes/142'
+
+    your_id = sys.argv[1]
+    your_password = sys.argv[2]
+
     my_driver_path = 'C:/Users/i7-860/OneDrive/デスクトップ/chromedriver_win32/chromedriver'
 
     # kibrlaにログイン
-    my_kibela = KibelaDriver(kibela_url, 'sgrsn1711@gmail.com', password, my_driver_path)
+    my_kibela = KibelaDriver(kibela_url, your_id, your_password, my_driver_path)
 
     # kibelaから記事をコピー
-    article_url = 'https://hidaka.kibe.la/notes/142'
-    # article_url = 'https://hidaka.kibe.la/notes/332'
     tmp_corpus = my_kibela.get_corpus(article_url)
 
     # deepLで翻訳
@@ -25,7 +28,7 @@ if __name__ == '__main__':
     my_deepL.close_driver()
 
     # kibelaに翻訳結果を書き込み
-    translation = my_deepL.get_translated_corpus() # {'en': 'ja', ...}の辞書型
+    translation = my_deepL.get_translated_corpus()
     ja_title, ja_text = my_kibela.get_translated(translation)
     my_kibela.write_article(ja_title, ja_text, pub=False)
     #my_kibela.close()
