@@ -10,10 +10,11 @@ if __name__ == '__main__':
     # 翻訳する記事のURL
     article_url = 'https://hidaka.kibe.la/notes/142'
 
+    # webドライバーのパス
+    my_driver_path = 'C:/Users/i7-860/OneDrive/デスクトップ/chromedriver_win32/chromedriver'
+
     your_id = sys.argv[1]
     your_password = sys.argv[2]
-
-    my_driver_path = 'C:/Users/i7-860/OneDrive/デスクトップ/chromedriver_win32/chromedriver'
 
     # kibrlaにログイン
     my_kibela = KibelaDriver(kibela_url, your_id, your_password, my_driver_path)
